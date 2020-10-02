@@ -20,8 +20,22 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
 
         // Do any additional setup after loading the view.
     }
-    
     @IBAction func onPostButton(_ sender: Any) {
+        let post = PFObject(className: "Posts")
+        
+        post["caption"] = commentField.text!
+        post["author"] = PFUser.current()!
+        
+        let imageData  = imageView.image!.pngData()
+        let file = PFFileObject(name: "image.png", data:imageData!)
+        post.saveInBackground { (success, error) in
+            if success {
+                print("Saved!")
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                print("Error: \(error?.localizedDescription)")
+            }
+        }
     }
     
     @IBAction func onCameraButton(_ sender: Any) {
